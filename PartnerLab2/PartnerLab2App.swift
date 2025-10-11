@@ -1,9 +1,7 @@
-//
-//  PartnerLab2App.swift
-//  PartnerLab2
-//
-//  Created by Taina Saenz on 10/1/25.
-//
+// Partner Lab 2
+// Group #2
+// Taina Saenz and Tori Zhang
+// October 14, 2025
 
 import SwiftUI
 

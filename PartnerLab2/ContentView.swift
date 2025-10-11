@@ -1,9 +1,7 @@
-//
-//  ContentView.swift
-//  PartnerLab2
-//
-//  Created by Taina Saenz on 10/1/25.
-//
+// Partner Lab 2
+// Group #2
+// Taina Saenz and Tori Zhang
+// October 14, 2025
 
 import SwiftUI
 
@@ -38,9 +36,12 @@ struct ContentView: View {
                 
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 15) {
-                        ForEach(cards.indices, id: \.self) { index in
+                        ForEach(0..<cards.count, id: \.self) { index in
                             CardView(card: cards[index])
                                 .aspectRatio(0.75, contentMode: .fit)
+                                .onTapGesture {
+                                    tappedCard(at: index)
+                                }
                             
                         }
                     }
@@ -51,8 +52,17 @@ struct ContentView: View {
             }
         }
     }
+    
+    // Please help add other functions for the game to work.
+    
+    
+    // tappedCard needs to be finished
+    func tappedCard(at index: Int) {
+        
+    }
 }
 
+// CardView needs to be finished
 struct CardView: View {
     let card: Card
     
