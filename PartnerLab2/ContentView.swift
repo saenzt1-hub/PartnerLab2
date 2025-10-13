@@ -5,6 +5,7 @@
 
 import SwiftUI
 
+// Card struct for each card in the game
 struct Card: Identifiable {
     let id = UUID()
     let emoji: String
@@ -12,12 +13,15 @@ struct Card: Identifiable {
     var isMatched: Bool = false
 }
 
+// Main view/game layout which includes the grid and title
 struct ContentView: View {
     @State private var cards: [Card] = []
     @State private var selectedCards: [Int] = []
     
+    // Flower image names
     private let flowers = ["flower1", "flower2","flower3", "flower4", "flower5", "flower6", "flower7", "flower8", "flower9","flower10", "flower11", "flower12"]
     
+    // columns for grid/layout
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible()),
@@ -26,14 +30,17 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
+            // Background
             LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.3), Color.purple.opacity(0.3)]), startPoint: .topLeading, endPoint: .bottomTrailing)
                 .ignoresSafeArea()
+            // Game Title
             VStack {
                 Text("Game")
                     .font(.system(size: 48, weight: .bold))
                     .foregroundColor(.blue)
                     .padding(.top, 20)
                 
+                // Grid of cards, able to scroll through
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 15) {
                         ForEach(0..<cards.count, id: \.self) { index in
@@ -53,16 +60,15 @@ struct ContentView: View {
         }
     }
     
-    // Please help add other functions for the game to work.
     
-    
-    // tappedCard needs to be finished
+    // Able to flip cards and see possible matches
     func tappedCard(at index: Int) {
         
     }
 }
 
-// CardView needs to be finished
+
+// CardView to show flower images
 struct CardView: View {
     let card: Card
     
