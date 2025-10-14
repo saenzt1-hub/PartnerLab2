@@ -8,7 +8,7 @@ import SwiftUI
 // Card struct for each card in the game
 struct Card: Identifiable {
     let id = UUID()
-    let emoji: String
+    let imageName: String
     var isFaceUp: Bool = false
     var isMatched: Bool = false
 }
@@ -59,6 +59,7 @@ struct ContentView: View {
             }
         }
     }
+    
     
     
     // Able to flip cards and see possible matches
