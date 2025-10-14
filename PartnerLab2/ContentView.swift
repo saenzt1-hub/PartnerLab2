@@ -64,6 +64,7 @@ struct ContentView: View {
     
     // Able to flip cards and see possible matches
     func tappedCard(at index: Int) {
+        // Add logic here please
         
     }
 }
@@ -80,7 +81,7 @@ struct CardView: View {
                 .background(RoundedRectangle(cornerRadius: 12)
                     .fill(Color.white)
                 )
-            
+            // Tori: add needed parts
         }
     }
 }
