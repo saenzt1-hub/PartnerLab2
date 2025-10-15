@@ -4,8 +4,5 @@ You can also restart the game by clicking the "New Game".
 This is a fun memory for everyone!
 
 
-Demo/Video for App:
-[
-](https://youtu.be/zj23WtiZhp4)
+https://github.com/user-attachments/assets/81a7348b-7326-4d9e-9e3a-8015926760b7
 
-(in Code, not Preview)
