@@ -17,7 +17,6 @@ struct Card: Identifiable {
 struct ContentView: View {
     @State private var cards: [Card] = []
     @State private var selectedCards: [Int] = []
-    @State private var canTap = true
     
     // Flower image names
     private let flowers = ["flower1", "flower2","flower3", "flower4", "flower5", "flower6", "flower7", "flower8", "flower9","flower10", "flower11", "flower12"]
@@ -26,8 +25,27 @@ struct ContentView: View {
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible()),
+        GridItem(.flexible()),
         GridItem(.flexible())
     ]
+
+    
+    // Initializer to set up the game
+    init() {
+        // Adding init here to fit the single-view state model
+        _cards = State(initialValue: createGameCards(for: Array(flowers.prefix(6))))
+    }
+    
+    // Helper function to create the initial shuffled deck
+    private func createGameCards(for content: [String]) -> [Card] {
+        var newCards: [Card] = []
+        for name in content {
+            newCards.append(Card(imageName: name))
+            newCards.append(Card(imageName: name))
+        }
+        return newCards.shuffled()
+    }
+    
     
     var body: some View {
         ZStack {
@@ -45,27 +63,79 @@ struct ContentView: View {
                             CardView(card: cards[index])
                                 .aspectRatio(0.75, contentMode: .fit)
                                 .onTapGesture {
-                                    tappedCard(at: index)
+                                    // Add animation for the flip effect
+                                    withAnimation(.easeIn(duration:0.2)){
+                                        tappedCard(at: index)
+                                    }
                                 }
-                            
+                                .rotation3DEffect(.degrees(cards[index].isFaceUp ? 0 : 180), axis: (x: 0, y: 1, z: 0))
+                                .opacity(cards[index].isMatched ? 0.3 : 1) // Fade matched cards
                         }
                     }
                     .padding()
                 }
                 
-            
+                // Add a button to reset the game
+                Button("New Game") {
+                    cards = createGameCards(for: Array(flowers.prefix(6)))
+                    selectedCards = []
+                }
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .clipShape(Capsule())
+                .padding(.bottom, 20)
             }
         }
     }
     
     
-    
     // Able to flip cards and see possible matches
     func tappedCard(at index: Int) {
-        // Add logic here please
         
-    }
-}
+         // 1. Check if the card is already matched or face up. If so, do nothing.
+         if cards[index].isMatched || cards[index].isFaceUp {
+             return
+         }
+         
+         // 2. Flip the card up and add to selected list
+         cards[index].isFaceUp = true
+         selectedCards.append(index)
+         
+         // 3. Check for match when two cards are face up
+         if selectedCards.count == 2 {
+             let index1 = selectedCards[0]
+             let index2 = selectedCards[1]
+             
+             // If the images match
+             if cards[index1].imageName == cards[index2].imageName {
+                 // IT'S A MATCH!
+                 cards[index1].isMatched = true
+                 cards[index2].isMatched = true
+                 selectedCards = [] // Clear the selected list
+                 
+             } else {
+                 // NOT A MATCH, flip them back down after a short delay
+                 // Dispatch after 0.7 seconds allows the user to see the cards.
+                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                     withAnimation(.easeOut(duration: 0.2)) {
+                         cards[index1].isFaceUp = false
+                         cards[index2].isFaceUp = false
+                         selectedCards = [] // Clear the selected list
+                     }
+                 }
+             }
+         } else if selectedCards.count > 2 {
+             // This case handles the user tapping a third card quickly before the match check is done.
+             // Flip the oldest card (the first one) back down.
+             let oldestIndex = selectedCards.removeFirst() // Remove and get the first index
+             cards[oldestIndex].isFaceUp = false
+             
+             // The selectedCards array now only contains the second card from the previous pair
+             // and the newest card (current index), which is correct for checking the next pair.
+         }
+     }
+ }
 
 
 // CardView to show flower images
@@ -74,12 +144,25 @@ struct CardView: View {
     
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.blue, lineWidth: 3)
-                .background(RoundedRectangle(cornerRadius: 12)
+            let shape = RoundedRectangle(cornerRadius: 12)
+            
+            if card.isFaceUp || card.isMatched {
+                // Face up state: show the image content
+                shape
                     .fill(Color.white)
-                )
-            // Tori: add needed parts
+                shape
+                    .stroke(card.isMatched ? Color.green : Color.blue, lineWidth: 3)
+                
+                Image(card.imageName) // Display the content
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding(5)
+                
+            } else {
+                // Face down state: show the card back (blue rectangle)
+                shape
+                    .fill(Color.blue)
+            }
         }
     }
 }
