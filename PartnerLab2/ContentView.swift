@@ -17,6 +17,7 @@ struct Card: Identifiable {
 struct ContentView: View {
     @State private var cards: [Card] = []
     @State private var selectedCards: [Int] = []
+    @State private var canTap = true
     
     // Flower image names
     private let flowers = ["flower1", "flower2","flower3", "flower4", "flower5", "flower6", "flower7", "flower8", "flower9","flower10", "flower11", "flower12"]
